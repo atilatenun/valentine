@@ -60,11 +60,6 @@ h2{
   scroll-snap-align:center;
 }
 
-.text-box{
-  font-family:'Playfair Display',serif;
-  line-height:1.7;
-}
-
 /* Cat image */
 #cats{
   position:absolute;
@@ -82,14 +77,15 @@ h2{
   position:absolute;
   font-size:48px;
   cursor:pointer;
-}
-#heart-message{
-  font-size:22px;
-  opacity:0;
-  transition:opacity 1.5s ease;
   text-align:center;
 }
-#heart-message.show{opacity:1}
+#heart span{
+  display:block;
+  font-size:14px;
+  opacity:0;
+  transition:opacity 1.5s ease;
+}
+#heart.show span{opacity:1}
 
 /* Quiz */
 .quiz button{
@@ -148,23 +144,14 @@ button{cursor:pointer}
   </div>
 </section>
 
-<section class="text-box">
-  <p>[ write your 200-word text here ✨ ]</p>
-</section>
-
 <section>
-  <h2>Top 7 things I love about you</h2>
-  <ul>
-    <li></li><li></li><li></li><li></li><li></li><li></li><li></li>
-  </ul>
-</section>
-
-<section class="game-box">
   <h2>Catch the heart &lt;3</h2>
   <div id="heart-area">
-    <div id="heart">❤️</div>
+    <div id="heart">
+      ❤️
+      <span>i miss u :(</span>
+    </div>
   </div>
-  <div id="heart-message">i miss u :(</div>
 </section>
 
 <section class="quiz">
@@ -187,26 +174,16 @@ button{cursor:pointer}
 </section>
 
 <section>
-  <img src="flowers.jpeg" style="width:100%;border-radius:16px;">
-</section>
-
-<section>
   <h2>help Ashraf win the game!!!</h2>
   <canvas id="game" width="300" height="400"></canvas>
   <button onclick="jump()">JUMP</button>
   <div id="message"></div>
 </section>
 
-<section>
-  <img src="wl.jpeg" style="width:100%;border-radius:16px;">
-  <img src="teamo.jpeg" style="width:100%;border-radius:16px;margin-top:10px;">
-</section>
-
 <script>
-/* Catch the heart – move 3 times */
+/* Catch the heart – move 3 times, text inside heart */
 let moves=0;
 const heart=document.getElementById("heart");
-const msg=document.getElementById("heart-message");
 
 function moveHeart(){
   if(moves<3){
@@ -214,17 +191,30 @@ function moveHeart(){
     heart.style.left=Math.random()*250+"px";
     moves++;
   }else{
-    heart.style.display="none";
-    msg.classList.add("show");
+    heart.classList.add("show");
   }
 }
 moveHeart();
 heart.onmouseover=moveHeart;
 heart.onclick=moveHeart;
 
-/* Quiz answer */
+/* Quiz */
 function showAnswer(){
   document.getElementById("answer").classList.add("show");
+}
+
+/* Jump sound */
+const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+function playJumpSound(){
+  const osc=audioCtx.createOscillator();
+  const gain=audioCtx.createGain();
+  osc.frequency.value=500;
+  osc.type="square";
+  gain.gain.value=0.1;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  osc.stop(audioCtx.currentTime+0.1);
 }
 
 /* Confetti */
@@ -240,34 +230,56 @@ function launchConfetti(){
   }
 }
 
-/* Jump game – stick figure */
+/* Jump game – zigzag steps + cute stick figure */
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 
-const steps=[350,300,250,200,150,100];
+const steps=[
+  {x:60,y:340},{x:180,y:300},{x:60,y:260},
+  {x:180,y:220},{x:60,y:180},{x:180,y:140}
+];
 let stepIndex=0;
-
-function drawPlayer(y){
-  ctx.strokeStyle="#000";
-  ctx.beginPath();
-  ctx.arc(150,y-15,6,0,Math.PI*2);
-  ctx.moveTo(150,y-9);
-  ctx.lineTo(150,y+10);
-  ctx.moveTo(150,y+10);
-  ctx.lineTo(140,y+25);
-  ctx.moveTo(150,y+10);
-  ctx.lineTo(160,y+25);
-  ctx.stroke();
-}
 
 function drawPlatforms(){
   ctx.fillStyle="#555";
-  steps.forEach((y,i)=>{
-    ctx.fillRect(110,y,80,6);
-  });
+  steps.forEach(s=>ctx.fillRect(s.x,s.y,60,6));
+}
+
+function drawPlayer(){
+  const s=steps[stepIndex];
+  const x=s.x+30, y=s.y-20;
+
+  ctx.strokeStyle="#000";
+  ctx.fillStyle="#ffd6e0";
+
+  // head
+  ctx.beginPath();
+  ctx.arc(x,y-10,7,0,Math.PI*2);
+  ctx.fill(); ctx.stroke();
+
+  // eyes
+  ctx.beginPath();
+  ctx.arc(x-3,y-12,1.2,0,Math.PI*2);
+  ctx.arc(x+3,y-12,1.2,0,Math.PI*2);
+  ctx.stroke();
+
+  // smile
+  ctx.beginPath();
+  ctx.arc(x,y-8,3,0,Math.PI);
+  ctx.stroke();
+
+  // body
+  ctx.beginPath();
+  ctx.moveTo(x,y-3);
+  ctx.lineTo(x,y+12);
+  ctx.lineTo(x-5,y+22);
+  ctx.moveTo(x,y+12);
+  ctx.lineTo(x+5,y+22);
+  ctx.stroke();
 }
 
 function jump(){
+  playJumpSound();
   if(stepIndex<steps.length-1){
     stepIndex++;
   }else{
@@ -280,13 +292,14 @@ function jump(){
 function draw(){
   ctx.clearRect(0,0,300,400);
   drawPlatforms();
-  drawPlayer(steps[stepIndex]);
+  drawPlayer();
 }
 draw();
 </script>
 
 </body>
 </html>
+
 
 
  
