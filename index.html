@@ -39,7 +39,7 @@ h1{
   font-size:3.6rem;
   text-align:center;
   color:var(--dark-red);
-  margin-top:60px;
+  margin-top:70px;
 }
 
 h2{
@@ -66,6 +66,12 @@ h2{
   top:10px;
   right:10px;
   width:70px;
+}
+
+/* Text box */
+.text-box{
+  font-family:'Playfair Display',serif;
+  line-height:1.7;
 }
 
 /* Catch the heart */
@@ -133,27 +139,49 @@ button{cursor:pointer}
 
 <img src="cats.jpeg" id="cats">
 
+<!-- TITLE -->
 <section>
   <h1>happy valentine’s love</h1>
 </section>
 
+<!-- PHOTO STRIP -->
 <section>
   <div class="gallery">
-    <img src="img1.jpg"><img src="img2.jpg"><img src="img3.jpg">
-    <img src="img4.jpg"><img src="img5.jpg">
+    <img src="img1.jpg">
+    <img src="img2.jpg">
+    <img src="img3.jpg">
+    <img src="img4.jpg">
+    <img src="img5.jpg">
   </div>
 </section>
 
+<!-- TEXT -->
+<section class="text-box">
+  <p>[ write your 200-word text here ✨ ]</p>
+</section>
+
+<!-- TOP 7 -->
+<section>
+  <h2>Top 7 things I love about you</h2>
+  <ul>
+    <li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+  </ul>
+</section>
+
+<!-- CATCH THE HEART -->
 <section>
   <h2>Catch the heart &lt;3</h2>
   <div id="heart-area">
-    <div id="heart">
-      ❤️
-      <span>i miss u :(</span>
-    </div>
+    <div id="heart">❤️<span>i miss u :(</span></div>
   </div>
 </section>
 
+<!-- PS IMAGE -->
+<section>
+  <img src="ps.png" style="width:100%;border-radius:16px;">
+</section>
+
+<!-- QUIZ -->
 <section class="quiz">
   <h2>Whom do I love the most?</h2>
   <p style="font-size:0.85rem;">(click on the right answer)</p>
@@ -164,6 +192,7 @@ button{cursor:pointer}
   <div id="answer">right answer 💗</div>
 </section>
 
+<!-- PLACES -->
 <section>
   <h2>Places we should visit!!</h2>
   <div class="gallery">
@@ -173,6 +202,12 @@ button{cursor:pointer}
   </div>
 </section>
 
+<!-- FLOWERS -->
+<section>
+  <img src="flowers.jpeg" style="width:100%;border-radius:16px;">
+</section>
+
+<!-- GAME -->
 <section>
   <h2>help Ashraf win the game!!!</h2>
   <canvas id="game" width="300" height="400"></canvas>
@@ -180,11 +215,16 @@ button{cursor:pointer}
   <div id="message"></div>
 </section>
 
+<!-- FINAL IMAGES -->
+<section>
+  <img src="wl.jpeg" style="width:100%;border-radius:16px;">
+  <img src="teamo.jpeg" style="width:100%;border-radius:16px;margin-top:10px;">
+</section>
+
 <script>
-/* Catch the heart – move 3 times, text inside heart */
+/* Catch the heart */
 let moves=0;
 const heart=document.getElementById("heart");
-
 function moveHeart(){
   if(moves<3){
     heart.style.top=Math.random()*150+"px";
@@ -209,7 +249,6 @@ function playJumpSound(){
   const osc=audioCtx.createOscillator();
   const gain=audioCtx.createGain();
   osc.frequency.value=500;
-  osc.type="square";
   gain.gain.value=0.1;
   osc.connect(gain);
   gain.connect(audioCtx.destination);
@@ -230,7 +269,7 @@ function launchConfetti(){
   }
 }
 
-/* Jump game – zigzag steps + cute stick figure */
+/* Jump game */
 const canvas=document.getElementById("game");
 const ctx=canvas.getContext("2d");
 
@@ -248,27 +287,18 @@ function drawPlatforms(){
 function drawPlayer(){
   const s=steps[stepIndex];
   const x=s.x+30, y=s.y-20;
-
   ctx.strokeStyle="#000";
   ctx.fillStyle="#ffd6e0";
-
-  // head
   ctx.beginPath();
   ctx.arc(x,y-10,7,0,Math.PI*2);
   ctx.fill(); ctx.stroke();
-
-  // eyes
   ctx.beginPath();
   ctx.arc(x-3,y-12,1.2,0,Math.PI*2);
   ctx.arc(x+3,y-12,1.2,0,Math.PI*2);
   ctx.stroke();
-
-  // smile
   ctx.beginPath();
   ctx.arc(x,y-8,3,0,Math.PI);
   ctx.stroke();
-
-  // body
   ctx.beginPath();
   ctx.moveTo(x,y-3);
   ctx.lineTo(x,y+12);
@@ -299,6 +329,7 @@ draw();
 
 </body>
 </html>
+
 
 
 
